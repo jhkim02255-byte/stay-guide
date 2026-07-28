@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#14171B">
+<title>Lumif — 숙소 오시는 길</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   Lumif · 숙소 오시는 길  —  공공 사인 시스템 (픽토그램) 스타일
+   ★ 크기 규칙: 아래 --fs-* 7개 값만 쓴다. 다른 font-size 금지.
+   ★ 4번 출구 카드와 3번 출구 카드는 완전히 같은 틀. 차이는 색뿐.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  /* 글자 크기 — 이 값들만 사용 */
+  --fs-xs:13px;    /* 라벨, 캡션 */
+  --fs-s:15px;     /* 보조 설명 */
+  --fs-m:17px;     /* 본문, 버튼, 값 */
+  --fs-l:22px;     /* 출구 이름, 주소 */
+  --fs-title:30px; /* 페이지 제목 */
+  --fs-badge:26px; /* 출구 배지 숫자 */
+  --fs-xl:46px;    /* 도보 시간 숫자 */
+
+  /* 색 */
+  --ink:#14171B;
+  --ink-2:#1D2128;
+  --ochre:#CD7C2F;
+  --ochre-d:#A85F1C;
+  --cream:#F4F1EA;
+  --cream-2:#E7E1D4;
+  --blue:#0F6CA8;
+  --naver:#03C75A;
+  --google:#4285F4;
+  --line:#DFD8CB;
+
+  /* 치수 */
+  --pad:18px;
+  --gap:10px;
+  --badge:52px;    /* 출구 배지 — 두 카드 동일 */
+  --r:10px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:#DDE2E8; color:var(--ink);
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,sans-serif;
+  font-size:var(--fs-m); line-height:1.5;
+  -webkit-font-smoothing:antialiased; word-break:keep-all;
+}
+.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;overflow:hidden}
+:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ── 헤더 ─────────────────────────────────── */
+.head{
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 2px,rgba(255,255,255,0) 2px 15px),
+    var(--ink);
+  padding:20px var(--pad) 18px;border-bottom:5px solid var(--ochre);
+}
+.head .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.head .sq{width:11px;height:11px;background:var(--ochre);flex:0 0 auto}
+.head .wm{
+  color:#fff;font-size:var(--fs-m);font-weight:800;letter-spacing:.34em;text-indent:.34em;
+}
+.head .loc{
+  margin-left:auto;color:rgba(255,255,255,.55);font-size:var(--fs-xs);font-weight:600;
+  letter-spacing:.04em;
+}
+.head h1{color:#fff;font-size:var(--fs-title);font-weight:800;letter-spacing:-.035em;line-height:1.15}
+
+/* ── 공통 섹션 라벨 ───────────────────────── */
+.lbl{
+  display:flex;align-items:center;gap:7px;
+  font-size:var(--fs-xs);font-weight:800;letter-spacing:.16em;color:var(--ochre-d);
+}
+.lbl svg{width:15px;height:15px;flex:0 0 auto}
+
+/* ── 주소 ─────────────────────────────────── */
+.addr{
+  background:var(--cream);border-left:8px solid var(--ochre);
+  padding:16px var(--pad);
+}
+.addr .ko{font-size:var(--fs-l);font-weight:800;letter-spacing:-.03em;line-height:1.35;margin-top:9px}
+.addr .en{font-size:var(--fs-s);font-weight:600;color:#5E564A;margin-top:6px}
+.addr .zi{font-size:var(--fs-xs);font-weight:600;color:#8B8274;margin-top:5px}
+
+/* ── 버튼 (진짜 눌린다) ───────────────────── */
+.btns{padding:14px var(--pad) 16px;display:flex;flex-direction:column;gap:var(--gap);background:#fff}
+.btn{
+  display:flex;align-items:center;gap:11px;
+  min-height:52px;padding:11px 15px;border-radius:var(--r);
+  font:800 var(--fs-m)/1.35 inherit;text-decoration:none;cursor:pointer;
+  border:2px solid var(--ink);background:#fff;color:var(--ink);
+  -webkit-tap-highlight-color:transparent;transition:transform .08s;
+}
+.btn:active{transform:translateY(1px)}
+.btn .ic{
+  width:26px;height:26px;border-radius:7px;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+}
+.btn .ic svg{width:16px;height:16px;color:#fff}
+.btn .arw{margin-left:auto;flex:0 0 auto;color:#9AA1A9}
+.btn .arw svg{width:17px;height:17px}
+.btn.copy{background:var(--ochre);border-color:var(--ochre);color:#fff}
+.btn.copy .arw{color:rgba(255,255,255,.75)}
+.btn.copy.done{background:#2E7D46;border-color:#2E7D46}
+.tip{
+  font-size:var(--fs-xs);color:#7A7062;text-align:center;line-height:1.6;padding:0 var(--pad) 16px;
+}
+.tip b{color:var(--ochre-d)}
+
+/* ── 역 헤더 줄 ───────────────────────────── */
+.station{
+  background:var(--ink);color:#fff;padding:10px var(--pad);
+  display:flex;align-items:center;gap:9px;
+}
+.station .r6{
+  width:24px;height:24px;border-radius:50%;background:var(--ochre);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--fs-xs);font-weight:800;flex:0 0 auto;
+}
+.station .nm{font-size:var(--fs-m);font-weight:800;letter-spacing:-.02em}
+.station .pic{margin-left:auto;opacity:.5}
+.station .pic svg{width:20px;height:20px;color:#fff;display:block}
+
+/* ── 출구 카드 (두 장 완전히 동일한 틀) ───── */
+.exits{padding:var(--pad);display:flex;flex-direction:column;gap:var(--gap);background:#fff}
+.exit{
+  border-radius:var(--r);padding:14px 15px;
+  display:grid;grid-template-columns:var(--badge) 1fr auto;
+  grid-template-areas:"badge name time" "badge memo time";
+  column-gap:13px;row-gap:5px;align-items:center;
+  min-height:96px;                       /* ← 두 장 같은 높이 */
+}
+.exit .badge{
+  grid-area:badge;align-self:center;
+  width:var(--badge);height:var(--badge);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--fs-badge);font-weight:800;line-height:1;
+}
+.exit .name{grid-area:name;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.exit .name b{font-size:var(--fs-l);font-weight:800;letter-spacing:-.03em}
+.exit .tag{
+  font-size:var(--fs-xs);font-weight:800;padding:3px 8px;border-radius:5px;white-space:nowrap;
+}
+.exit .memo{grid-area:memo;font-size:var(--fs-xs);font-weight:600;line-height:1.5;opacity:.85}
+.exit .time{
+  grid-area:time;align-self:center;display:flex;align-items:baseline;gap:2px;
+}
+.exit .time b{font-size:var(--fs-xl);font-weight:800;letter-spacing:-.04em;line-height:1}
+.exit .time span{font-size:var(--fs-m);font-weight:800}
+/* ── 차이는 색뿐 ── */
+.exit.a{background:var(--ochre);color:#fff}
+.exit.a .badge{background:#fff;color:var(--ochre-d)}
+.exit.a .tag{background:var(--ink);color:#fff}
+.exit.b{background:var(--cream);color:var(--ink);border:2px solid var(--line)}
+.exit.b .badge{background:var(--ink);color:#fff}
+.exit.b .tag{background:var(--cream-2);color:#6A6154}
+
+/* ── 공항 ─────────────────────────────────── */
+.air{background:var(--blue);color:#fff;padding:15px var(--pad);position:relative;overflow:hidden}
+.air .lbl{color:rgba(255,255,255,.82)}
+.air .rows{margin-top:11px;display:flex;flex-direction:column;gap:7px}
+.air .row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:rgba(255,255,255,.13);border:1.5px solid rgba(255,255,255,.28);
+  border-radius:7px;padding:9px 12px;
+}
+.air .row .k{font-size:var(--fs-m);font-weight:800}
+.air .row .v{font-size:var(--fs-m);font-weight:800}
+.air .path{
+  margin-top:10px;font-size:var(--fs-xs);font-weight:700;line-height:1.65;
+  color:rgba(255,255,255,.9);
+}
+.air .plane{position:absolute;right:-14px;bottom:-16px;width:104px;height:104px;opacity:.13;color:#fff}
+
+/* ── 주의 ─────────────────────────────────── */
+.note{background:var(--ink);color:#fff;padding:15px var(--pad) 18px;position:relative}
+.note::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:7px;
+  background:repeating-linear-gradient(45deg,var(--ochre) 0 9px,var(--ink-2) 9px 18px);
+}
+.note .lbl{color:#E8A45E;margin-top:6px}
+.note .items{margin-top:11px;display:flex;flex-direction:column;gap:10px}
+.note .it{display:flex;gap:11px;align-items:flex-start}
+.note .it svg{width:22px;height:22px;flex:0 0 auto;color:#E8A45E;margin-top:1px}
+.note .it .k{font-size:var(--fs-m);font-weight:800;letter-spacing:-.02em;line-height:1.3}
+.note .it .d{font-size:var(--fs-xs);font-weight:600;color:rgba(255,255,255,.62);margin-top:3px;line-height:1.5}
+
+/* ── 도움 / 꼬리말 ────────────────────────── */
+.help{background:var(--cream);padding:16px var(--pad)}
+.help p{font-size:var(--fs-s);font-weight:600;line-height:1.7;color:#5E564A;margin-top:8px}
+.foot{
+  background:var(--ink);color:rgba(255,255,255,.45);
+  font-size:var(--fs-xs);text-align:center;padding:14px var(--pad) 20px;line-height:1.7;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 헤더 -->
+  <header class="head">
+    <div class="top">
+      <span class="sq" aria-hidden="true"></span>
+      <span class="wm">LUMIF</span>
+      <span class="loc">서울 마포구 신수동</span>
+    </div>
+    <h1>숙소 오시는 길</h1>
+  </header>
+
+  <!-- 주소 -->
+  <section class="addr" aria-labelledby="l-addr">
+    <div class="lbl" id="l-addr">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M32 4c-11 0-20 8.8-20 19.7 0 14.3 17.6 33.4 18.4 34.2a2.2 2.2 0 0 0 3.2 0C34.4 57.1 52 38 52 23.7 52 12.8 43 4 32 4zm0 27a7.4 7.4 0 1 0 0-14.8 7.4 7.4 0 0 0 0 14.8z"/></svg>
+      주소
+    </div>
+    <p class="ko">서울특별시 마포구 독막로34길 26</p>
+    <p class="en">26 Dongmak-ro 34-gil, Mapo-gu, Seoul</p>
+    <p class="zi">지번 신수동 42-12 · 우편번호 04090</p>
+  </section>
+
+  <!-- 버튼 -->
+  <nav class="btns" aria-label="주소 복사 및 지도 열기">
+    <button type="button" class="btn copy" id="copyBtn">
+      <span class="ic" style="background:rgba(255,255,255,.22)" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+      </span>
+      <span id="copyLabel">주소 복사하기</span>
+      <span class="arw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+    </button>
+
+    <a class="btn" target="_blank" rel="noopener noreferrer"
+       href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%EC%8B%A0%EC%88%98%EB%8F%99%2042-12">
+      <span class="ic" style="background:var(--naver)" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.6 6.6 11.9 6.9 12.2a.9.9 0 0 0 1.2 0c.3-.3 6.9-6.6 6.9-12.2A7.5 7.5 0 0 0 12 2zm0 10.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8z"/></svg>
+      </span>
+      네이버 지도로 열기
+      <span class="arw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+    </a>
+
+    <a class="btn" target="_blank" rel="noopener noreferrer"
+       href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C+%EB%A7%88%ED%8F%AC%EA%B5%AC+%EB%8F%85%EB%A7%89%EB%A1%9C34%EA%B8%B8+26">
+      <span class="ic" style="background:var(--google)" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.6 6.6 11.9 6.9 12.2a.9.9 0 0 0 1.2 0c.3-.3 6.9-6.6 6.9-12.2A7.5 7.5 0 0 0 12 2zm0 10.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8z"/></svg>
+      </span>
+      Google Maps로 열기
+      <span class="arw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+    </a>
+
+    <a class="btn" target="_blank" rel="noopener noreferrer"
+       href="https://map.naver.com/p/directions/-/126.9390693,37.5462176,Lumif/-/walk">
+      <span class="ic" style="background:var(--ink)" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L20 22 L12 17 L4 22 Z"/></svg>
+      </span>
+      내 위치에서 길찾기
+      <span class="arw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+    </a>
+  </nav>
+  <p class="tip">택시를 타시면 <b>주소 복사하기</b>를 눌러 기사님께 보여주세요.</p>
+  <p class="sr" role="status" aria-live="polite" id="copyStatus"></p>
+
+  <!-- 역 -->
+  <div class="station">
+    <span class="r6" aria-hidden="true">6</span>
+    <span class="nm">대흥역 (서강대앞)</span>
+    <span class="pic" aria-hidden="true">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="6" width="40" height="42" rx="9"/><rect x="21" y="14" width="22" height="13" rx="3"/><path d="M18 48 L12 58"/><path d="M46 48 L52 58"/><path d="M6 58 H58"/></svg>
+    </span>
+  </div>
+
+  <!-- 출구 -->
+  <section class="exits" aria-label="출구 안내">
+    <div class="exit a">
+      <div class="badge">4</div>
+      <div class="name"><b>4번 출구</b><span class="tag">가장 빠름</span></div>
+      <div class="memo">숙소에서 가장 가까운 출구</div>
+      <div class="time"><b>6</b><span>분</span></div>
+    </div>
+    <div class="exit b">
+      <div class="badge">3</div>
+      <div class="name"><b>3번 출구</b><span class="tag">엘리베이터</span></div>
+      <div class="memo">역에 엘리베이터 있음 · 캐리어 무거울 때</div>
+      <div class="time"><b>7</b><span>분</span></div>
+    </div>
+  </section>
+
+  <!-- 공항 -->
+  <section class="air" aria-labelledby="l-air">
+    <div class="lbl" id="l-air">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M32 2c2.6 0 4.4 3 4.4 8.4V24l24 15v6.4l-24-6.4v10.6l7 5.6V60L32 56.4 20.6 60v-4.8l7-5.6V39L3.6 45.4V39l24-15V10.4C27.6 5 29.4 2 32 2z"/></svg>
+      공항에서 오시는 길
+    </div>
+    <div class="rows">
+      <div class="row"><span class="k">인천공항</span><span class="v">약 1시간 20분</span></div>
+      <div class="row"><span class="k">김포공항</span><span class="v">약 40분</span></div>
+    </div>
+    <p class="path">공항철도 → 공덕역 환승 → 6호선 한 정거장 → 대흥역</p>
+    <span class="plane" aria-hidden="true">
+      <svg viewBox="0 0 64 64"><path fill="currentColor" d="M32 2c2.6 0 4.4 3 4.4 8.4V24l24 15v6.4l-24-6.4v10.6l7 5.6V60L32 56.4 20.6 60v-4.8l7-5.6V39L3.6 45.4V39l24-15V10.4C27.6 5 29.4 2 32 2z"/></svg>
+    </span>
+  </section>
+
+  <!-- 주의 -->
+  <section class="note" aria-labelledby="l-note">
+    <div class="lbl" id="l-note">도착 전 알아두세요</div>
+    <div class="items">
+      <div class="it">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 57 H18 V44 H31 V31 H44 V18 H59"/></svg>
+        <div><div class="k">건물 2층 · 엘리베이터 없음</div><div class="d">마지막에 계단을 오르셔야 합니다.</div></div>
+      </div>
+      <div class="it">
+        <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 19 V45 M25 19 H34 a8.5 8.5 0 0 1 0 17 H25" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 14 L50 50" fill="none" stroke="currentColor" stroke-width="5.4" stroke-linecap="round"/></svg>
+        <div><div class="k">주차 불가</div><div class="d">지하철이나 택시를 이용해 주세요.</div></div>
+      </div>
+      <div class="it">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 20 H30 V10"/><rect x="16" y="20" width="32" height="34" rx="4"/><path d="M26 30 V44 M38 30 V44"/></svg>
+        <div><div class="k">짐 보관 가능</div><div class="d">체크인 당일 낮 12시 이후부터요.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 도움 -->
+  <section class="help">
+    <div class="lbl">길을 못 찾으시겠나요?</div>
+    <p>헤매지 마시고 <b>에어비앤비 메시지</b>로 연락 주세요.<br>
+       지금 계신 곳 사진을 한 장 보내주시면 가장 빠르게 찾아드립니다.</p>
+  </section>
+
+  <footer class="foot">
+    LUMIF · 서울특별시 마포구<br>외국인관광도시민박업 제2025-000379호
+  </footer>
+
+</div>
+
+<script>
+/* 주소 복사 — 팝업(alert/confirm)을 쓰지 않는다.
+   크롬이 팝업을 막으면 눌러도 무반응처럼 보이기 때문에,
+   버튼 글자와 색이 바뀌어 게스트가 눈으로 확인하게 한다. */
+const ADDRESS = '서울특별시 마포구 독막로34길 26';
+const btn = document.getElementById('copyBtn');
+const label = document.getElementById('copyLabel');
+const stat = document.getElementById('copyStatus');
+let timer = null;
+
+btn.addEventListener('click', async () => {
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(ADDRESS);
+    ok = true;
+  } catch (e) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = ADDRESS;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e2) { ok = false; }
+  }
+
+  label.textContent = ok ? '복사됐어요' : '길게 눌러 복사해 주세요';
+  stat.textContent  = ok ? '주소가 복사되었습니다.' : '복사에 실패했습니다.';
+  btn.classList.toggle('done', ok);
+
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    label.textContent = '주소 복사하기';
+    stat.textContent = '';
+    btn.classList.remove('done');
+  }, 2200);
+});
+</script>
+</body>
+</html>
