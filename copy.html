@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Lumif · 주소 복사</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   노션 embed 안에서 도는 작은 복사 위젯.
+   ★ 노션은 iframe 에 clipboard-write 권한을 안 준다.
+     → navigator.clipboard 가 막히면 execCommand 로 자동 폴백.
+   ★ 알림창(alert/confirm) 금지 — 버튼 자체가 눈으로 결과를 보여준다.
+   ★ 폰 다크모드를 따라가게 해서 노션 화면과 톤이 맞게 한다.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#FFFFFF; --card:#F7F6F3; --line:#E4E1DA;
+  --ink:#2B2B29; --ink2:#7A7871;
+  --green:#3D6B45; --green-bg:#EDF3EC; --ok:#2E7D46;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#191919; --card:#252525; --line:#373737;
+    --ink:#E9E9E7; --ink2:#9B9A97;
+    --green:#7FB88A; --green-bg:#243026; --ok:#4FA96A;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg)}
+body{
+  font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color:var(--ink); padding:10px; word-break:keep-all;
+}
+.row{
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1px solid var(--line); border-radius:10px;
+  padding:12px 12px 12px 14px; margin-bottom:9px;
+  cursor:pointer; user-select:none;
+  transition:background .12s ease, border-color .12s ease;
+}
+.row:last-child{margin-bottom:0}
+.row:active{transform:translateY(1px)}
+.row .txt{flex:1;min-width:0}
+.row .addr{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.4;word-break:break-word}
+.row .tag{font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:.06em;margin-bottom:3px}
+.btn{
+  flex:0 0 auto; width:42px; height:42px; border-radius:10px;
+  background:var(--green-bg); color:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  border:none; cursor:pointer;
+}
+.btn svg{width:20px;height:20px;display:block}
+.row.done{border-color:var(--ok)}
+.row.done .btn{background:var(--ok);color:#fff}
+.row.done .tag{color:var(--ok)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<div class="row" data-copy="서울특별시 마포구 독막로34길 26">
+  <div class="txt">
+    <div class="tag" data-label>KOREAN · 한국어 주소</div>
+    <div class="addr">서울특별시 마포구 독막로34길 26</div>
+  </div>
+  <button class="btn" type="button" aria-label="주소 복사">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="12" height="12" rx="2.5"/>
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>
+    </svg>
+  </button>
+</div>
+
+<div class="row" data-copy="26 Dongmak-ro 34-gil, Mapo-gu, Seoul">
+  <div class="txt">
+    <div class="tag" data-label>ENGLISH · 영문 주소</div>
+    <div class="addr">26 Dongmak-ro 34-gil, Mapo-gu, Seoul</div>
+  </div>
+  <button class="btn" type="button" aria-label="Copy address">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="12" height="12" rx="2.5"/>
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>
+    </svg>
+  </button>
+</div>
+
+<p class="sr" role="status" aria-live="polite" id="say"></p>
+
+<script>
+/* 복사 — 최신 방식이 막히면(노션 iframe 권한) 옛 방식으로 자동 폴백 */
+async function copyText(text){
+  try {
+    if (navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (e) { /* Feature Policy 로 막힘 → 아래로 */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly','');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);   // iOS 대응
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e2) { return false; }
+}
+
+const DONE = { ko:'복사됨 ✓', en:'COPIED ✓' };
+const say = document.getElementById('say');
+
+document.querySelectorAll('.row').forEach(row => {
+  const label = row.querySelector('[data-label]');
+  const original = label.textContent;
+  let timer = null;
+
+  const run = async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const ok = await copyText(row.dataset.copy);
+    label.textContent = ok ? DONE.ko + ' / ' + DONE.en : '길게 눌러 복사해 주세요';
+    row.classList.toggle('done', ok);
+    say.textContent = ok ? '주소가 복사되었습니다.' : '복사에 실패했습니다.';
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      label.textContent = original;
+      row.classList.remove('done');
+      say.textContent = '';
+    }, 2200);
+  };
+
+  row.addEventListener('click', run);
+  row.querySelector('.btn').addEventListener('click', run);
+});
+
+/* 노션 embed 높이를 내용에 맞게 알려준다 (지원되면 적용됨) */
+function tellHeight(){
+  const h = document.documentElement.scrollHeight;
+  try { parent.postMessage({ type:'resize', height:h }, '*'); } catch(e){}
+}
+window.addEventListener('load', tellHeight);
+window.addEventListener('resize', tellHeight);
+</script>
+</body>
+</html>
