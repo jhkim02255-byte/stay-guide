@@ -41,8 +41,17 @@ body{
 .row:last-child{margin-bottom:0}
 .row:active{transform:translateY(1px)}
 .row .txt{flex:1;min-width:0}
-.row .addr{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.4;word-break:break-word}
-.row .tag{font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:.06em;margin-bottom:3px}
+/* ★ 글자 크기: 폰 폭에서 줄바꿈이 안 생기는 선까지만 키운다.
+   영문 주소(가장 긴 줄)를 기준으로 잡았고, 좁아지면 자동으로 조금 줄어든다. */
+.row .addr{
+  font-size:clamp(15px, 4.35vw, 18px);
+  font-weight:700; letter-spacing:-.02em; line-height:1.35;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row .tag{
+  font-size:clamp(11px, 3.1vw, 13px);
+  font-weight:600; color:var(--ink2); letter-spacing:.05em; margin-bottom:4px;
+}
 .btn{
   flex:0 0 auto; width:42px; height:42px; border-radius:10px;
   background:var(--green-bg); color:var(--green);
