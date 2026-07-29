@@ -26,11 +26,11 @@
   }
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-/* ★ 위젯 안에서 위아래로 스크롤/튕김이 생기지 않게 완전히 고정한다.
-   (노션 embed 안이라 내부 스크롤이 생기면 손가락이 엉킨다) */
+/* ★ 위젯 안에서 스크롤이 생기지 않게 한다.
+   단, height:100%+overflow:hidden 으로 막으면 내용이 잘리므로
+   높이는 내용에 맡기고 '튕김'만 차단한다. 실제 높이는 노션 블록 쪽에서 맞춘다. */
 html,body{
   background:var(--bg);
-  height:100%; overflow:hidden;
   overscroll-behavior:none; touch-action:manipulation;
 }
 body{
