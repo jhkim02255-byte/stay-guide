@@ -30,8 +30,9 @@ html,body{background:var(--bg)}
 body{
   font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   color:var(--ink); word-break:keep-all;
-  /* 위쪽 여백을 더 준다 — 노션이 터치기기에서 붙이는 ⋯ 버튼이 글자와 안 겹치게 */
-  padding:20px 10px 10px;
+  /* 위쪽 여백 — 노션이 터치기기에서 오른쪽 위에 붙이는 ⋯ 버튼(약 36px)이
+     상자와 절대 안 겹치도록 그보다 넉넉히 비운다. */
+  padding:52px 10px 10px;
 }
 .row{
   display:flex; align-items:center; gap:10px;
