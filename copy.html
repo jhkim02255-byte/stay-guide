@@ -29,7 +29,9 @@
 html,body{background:var(--bg)}
 body{
   font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  color:var(--ink); padding:10px; word-break:keep-all;
+  color:var(--ink); word-break:keep-all;
+  /* 위쪽 여백을 더 준다 — 노션이 터치기기에서 붙이는 ⋯ 버튼이 글자와 안 겹치게 */
+  padding:20px 10px 10px;
 }
 .row{
   display:flex; align-items:center; gap:10px;
@@ -41,12 +43,16 @@ body{
 .row:last-child{margin-bottom:0}
 .row:active{transform:translateY(1px)}
 .row .txt{flex:1;min-width:0}
-/* ★ 글자 크기: 폰 폭에서 줄바꿈이 안 생기는 선까지만 키운다.
-   영문 주소(가장 긴 줄)를 기준으로 잡았고, 좁아지면 자동으로 조금 줄어든다. */
+/* ★ 글자 크기: 줄바꿈이 안 생기는 선까지만 키운다.
+   글자 수가 달라서 줄마다 따로 잡는다 —
+   한글 주소 20자 / 영문 주소 36자 → 영문을 조금 작게. */
 .row .addr{
-  font-size:clamp(15px, 4.35vw, 18px);
-  font-weight:700; letter-spacing:-.02em; line-height:1.35;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  font-weight:700; letter-spacing:-.02em; line-height:1.34;
+  font-size:clamp(15px, 5.0vw, 19px);          /* 한글 주소 */
+}
+.row.long .addr{
+  font-size:clamp(13px, 3.55vw, 15px);          /* 영문 주소(긴 줄) */
+  letter-spacing:-.035em;
 }
 .row .tag{
   font-size:clamp(11px, 3.1vw, 13px);
@@ -80,7 +86,7 @@ body{
   </button>
 </div>
 
-<div class="row" data-copy="26 Dongmak-ro 34-gil, Mapo-gu, Seoul">
+<div class="row long" data-copy="26 Dongmak-ro 34-gil, Mapo-gu, Seoul">
   <div class="txt">
     <div class="tag" data-label>ENGLISH · 영문 주소</div>
     <div class="addr">26 Dongmak-ro 34-gil, Mapo-gu, Seoul</div>
