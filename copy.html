@@ -26,14 +26,18 @@
   }
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-/* ★ 스크롤 관련 주의:
-   overscroll-behavior:none 을 주면 위젯 위에 손가락을 댔을 때
-   부모(노션 페이지)로 스크롤이 안 넘어가 화면이 멈춘다. 절대 넣지 말 것.
-   위젯 안에 스크롤이 생기지 않게 하는 건 '노션 블록 높이'로 해결한다. */
-html,body{
+/* ★ 스크롤 규칙 — 두 번 실패해서 남기는 메모
+   ① overscroll-behavior:none  → 부모(노션)로 스크롤이 안 넘어가 화면이 멈춘다. 쓰지 말 것.
+   ② height:100% + overflow:hidden → 본문 높이가 화면에 묶여 내용이 잘린다. 쓰지 말 것.
+   ③ 정답: overflow:hidden 만 (높이 고정 없이) + 내용을 세로 가운데 정렬.
+      내부 스크롤은 사라지고, 손가락 동작은 부모로 그대로 넘어간다. */
+html{background:var(--bg)}
+body{
   background:var(--bg);
-  overscroll-behavior:auto;
-  touch-action:manipulation;   /* 더블탭 확대만 막고 스크롤은 그대로 통과 */
+  overflow:hidden;              /* 내부 스크롤 제거 (스크롤 전달은 막지 않음) */
+  touch-action:manipulation;    /* 더블탭 확대만 차단 */
+  min-height:100vh;
+  display:flex; flex-direction:column; justify-content:center;
 }
 body{
   font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
