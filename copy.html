@@ -26,7 +26,13 @@
   }
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg)}
+/* ★ 위젯 안에서 위아래로 스크롤/튕김이 생기지 않게 완전히 고정한다.
+   (노션 embed 안이라 내부 스크롤이 생기면 손가락이 엉킨다) */
+html,body{
+  background:var(--bg);
+  height:100%; overflow:hidden;
+  overscroll-behavior:none; touch-action:manipulation;
+}
 body{
   font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   color:var(--ink); word-break:keep-all;
