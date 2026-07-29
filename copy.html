@@ -26,12 +26,14 @@
   }
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-/* ★ 위젯 안에서 스크롤이 생기지 않게 한다.
-   단, height:100%+overflow:hidden 으로 막으면 내용이 잘리므로
-   높이는 내용에 맡기고 '튕김'만 차단한다. 실제 높이는 노션 블록 쪽에서 맞춘다. */
+/* ★ 스크롤 관련 주의:
+   overscroll-behavior:none 을 주면 위젯 위에 손가락을 댔을 때
+   부모(노션 페이지)로 스크롤이 안 넘어가 화면이 멈춘다. 절대 넣지 말 것.
+   위젯 안에 스크롤이 생기지 않게 하는 건 '노션 블록 높이'로 해결한다. */
 html,body{
   background:var(--bg);
-  overscroll-behavior:none; touch-action:manipulation;
+  overscroll-behavior:auto;
+  touch-action:manipulation;   /* 더블탭 확대만 막고 스크롤은 그대로 통과 */
 }
 body{
   font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
