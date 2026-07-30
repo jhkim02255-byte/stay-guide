@@ -136,7 +136,37 @@ async function copyText(text){
   } catch (e2) { return false; }
 }
 
-const DONE = { ko:'복사됨 ✓', en:'COPIED ✓' };
+/* ─── 언어 ────────────────────────────────────────────────────
+   노션 페이지마다 embed 주소 뒤에 ?lang=zh 처럼 붙여서 쓴다.
+   ★ 파라미터가 없으면 지금까지와 '완전히 똑같이'(한국어) 동작한다.
+     → 기존 페이지들의 embed 주소를 안 바꿔도 안 깨진다.
+   ★ 라벨은 짧게 유지한다 — 길면 두 줄로 넘어가면서
+     노션 embed 높이에 안 맞아 아래가 잘린다. */
+const L = {
+  ko:{ k:'KOREAN · 한국어 주소',            e:'ENGLISH · 영문 주소',
+       done:'복사됨 ✓',        fail:'길게 눌러 복사해 주세요',
+       sayOk:'주소가 복사되었습니다.',  sayNo:'복사에 실패했습니다.' },
+  en:{ k:'KOREAN · for your taxi driver',   e:'ENGLISH ADDRESS',
+       done:'COPIED ✓',       fail:'Press and hold to copy',
+       sayOk:'Address copied.',        sayNo:'Copy failed.' },
+  zh:{ k:'韩语地址 · 给司机看',             e:'英文地址',
+       done:'已复制 ✓',       fail:'请长按复制',
+       sayOk:'地址已复制。',            sayNo:'复制失败。' },
+  ja:{ k:'韓国語の住所 · 運転手に見せる',    e:'英語の住所',
+       done:'コピーしました ✓', fail:'長押しでコピー',
+       sayOk:'住所をコピーしました。',   sayNo:'コピーに失敗しました。' },
+  fr:{ k:'CORÉEN · pour le chauffeur',     e:'ADRESSE EN ANGLAIS',
+       done:'COPIÉ ✓',        fail:'Appuyez longuement',
+       sayOk:'Adresse copiée.',        sayNo:'Échec de la copie.' }
+};
+const lang = (new URLSearchParams(location.search).get('lang') || 'ko').toLowerCase();
+const T = L[lang] || L.ko;
+if (T !== L.ko) {
+  const tags = document.querySelectorAll('[data-label]');
+  if (tags[0]) tags[0].textContent = T.k;
+  if (tags[1]) tags[1].textContent = T.e;
+  document.documentElement.lang = lang;
+}
 const say = document.getElementById('say');
 
 document.querySelectorAll('.row').forEach(row => {
@@ -148,9 +178,9 @@ document.querySelectorAll('.row').forEach(row => {
     ev.preventDefault();
     ev.stopPropagation();
     const ok = await copyText(row.dataset.copy);
-    label.textContent = ok ? DONE.ko + ' / ' + DONE.en : '길게 눌러 복사해 주세요';
+    label.textContent = ok ? T.done : T.fail;
     row.classList.toggle('done', ok);
-    say.textContent = ok ? '주소가 복사되었습니다.' : '복사에 실패했습니다.';
+    say.textContent = ok ? T.sayOk : T.sayNo;
     clearTimeout(timer);
     timer = setTimeout(() => {
       label.textContent = original;
