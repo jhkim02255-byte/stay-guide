@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Lumif 마포 · 주소 복사</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   노션 embed 안에서 도는 작은 복사 위젯. ★ 마포 숙소용 ★
+   ※ 대흥 숙소용은 copy.html — 주소만 다르고 나머지는 같다.
+     둘을 파일로 나눈 이유: copy.html 을 건드리면 대흥 5개 언어
+     페이지가 전부 영향을 받는다. 주소가 다른 숙소는 파일을 나눈다.
+
+   ★ 노션은 iframe 에 clipboard-write 권한을 안 준다.
+     → navigator.clipboard 가 막히면 execCommand 로 자동 폴백.
+   ★ 알림창(alert/confirm) 금지 — 버튼 자체가 눈으로 결과를 보여준다.
+   ★ 폰 다크모드를 따라가게 해서 노션 화면과 톤이 맞게 한다.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#FFFFFF; --card:#F7F6F3; --line:#E4E1DA;
+  --ink:#2B2B29; --ink2:#7A7871;
+  --green:#3D6B45; --green-bg:#EDF3EC; --ok:#2E7D46;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#191919; --card:#252525; --line:#373737;
+    --ink:#E9E9E7; --ink2:#9B9A97;
+    --green:#7FB88A; --green-bg:#243026; --ok:#4FA96A;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* ★ 스크롤 규칙 — 두 번 실패해서 남기는 메모
+   ① overscroll-behavior:none  → 부모(노션)로 스크롤이 안 넘어가 화면이 멈춘다. 쓰지 말 것.
+   ② height:100% + overflow:hidden → 본문 높이가 화면에 묶여 내용이 잘린다. 쓰지 말 것.
+   ③ 정답: overflow:hidden 만 (높이 고정 없이) + 내용을 세로 가운데 정렬.
+      내부 스크롤은 사라지고, 손가락 동작은 부모로 그대로 넘어간다. */
+html{background:var(--bg)}
+body{
+  background:var(--bg);
+  overflow:hidden;              /* 내부 스크롤 제거 (스크롤 전달은 막지 않음) */
+  touch-action:manipulation;    /* 더블탭 확대만 차단 */
+  /* 위 여백은 노션 ⋯ 버튼을 피할 만큼만. 넓으면 페이지에 빈칸이 생긴다. */
+  padding:32px 8px 8px;
+}
+body{
+  font-family:ui-sans-serif,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color:var(--ink); word-break:keep-all;
+}
+.row{
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1px solid var(--line); border-radius:10px;
+  padding:12px 12px 12px 14px; margin-bottom:9px;
+  cursor:pointer; user-select:none;
+  transition:background .12s ease, border-color .12s ease;
+}
+.row:last-child{margin-bottom:0}
+.row:active{transform:translateY(1px)}
+.row .txt{flex:1;min-width:0}
+/* ★ 글자 크기: 줄바꿈이 안 생기는 선까지만 키운다.
+   글자 수가 달라서 줄마다 따로 잡는다 —
+   한글 주소 18자 / 영문 주소 34자 → 영문을 조금 작게.
+   (대흥은 19자/36자였다. 마포가 더 짧으니 이 크기로 안 잘린다.) */
+.row .addr{
+  font-weight:700; letter-spacing:-.02em; line-height:1.34;
+  white-space:nowrap;                            /* 한 줄 고정 — 높이가 안 변해야 잘림이 없다 */
+  font-size:clamp(13px, 4.5vw, 17px);            /* 한글 주소 18자 기준 */
+}
+.row.long .addr{
+  font-size:clamp(11.5px, 4.0vw, 14.5px);        /* 영문 주소 34자 기준 */
+  letter-spacing:-.035em;
+}
+.row .tag{
+  font-size:clamp(11px, 3.1vw, 13px);
+  font-weight:600; color:var(--ink2); letter-spacing:.05em; margin-bottom:4px;
+}
+.btn{
+  flex:0 0 auto; width:42px; height:42px; border-radius:10px;
+  background:var(--green-bg); color:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  border:none; cursor:pointer;
+}
+.btn svg{width:20px;height:20px;display:block}
+.row.done{border-color:var(--ok)}
+.row.done .btn{background:var(--ok);color:#fff}
+.row.done .tag{color:var(--ok)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<div class="row" data-copy="서울특별시 마포구 삼개로1길 19">
+  <div class="txt">
+    <div class="tag" data-label>KOREAN · 한국어 주소</div>
+    <div class="addr">서울특별시 마포구 삼개로1길 19</div>
+  </div>
+  <button class="btn" type="button" aria-label="주소 복사">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="12" height="12" rx="2.5"/>
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>
+    </svg>
+  </button>
+</div>
+
+<div class="row long" data-copy="19 Samgae-ro 1-gil, Mapo-gu, Seoul">
+  <div class="txt">
+    <div class="tag" data-label>ENGLISH · 영문 주소</div>
+    <div class="addr">19 Samgae-ro 1-gil, Mapo-gu, Seoul</div>
+  </div>
+  <button class="btn" type="button" aria-label="Copy address">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="12" height="12" rx="2.5"/>
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>
+    </svg>
+  </button>
+</div>
+
+<p class="sr" role="status" aria-live="polite" id="say"></p>
+
+<script>
+/* 복사 — 최신 방식이 막히면(노션 iframe 권한) 옛 방식으로 자동 폴백 */
+async function copyText(text){
+  try {
+    if (navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (e) { /* Feature Policy 로 막힘 → 아래로 */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly','');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);   // iOS 대응
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e2) { return false; }
+}
+
+/* ─── 언어 ────────────────────────────────────────────────────
+   노션 페이지마다 embed 주소 뒤에 ?lang=zh 처럼 붙여서 쓴다.
+   ★ 파라미터가 없으면 한국어로 동작한다.
+   ★ 라벨은 짧게 유지한다 — 길면 두 줄로 넘어가면서
+     노션 embed 높이에 안 맞아 아래가 잘린다. */
+const L = {
+  ko:{ k:'KOREAN · 한국어 주소',            e:'ENGLISH · 영문 주소',
+       done:'복사됨 ✓',        fail:'길게 눌러 복사해 주세요',
+       sayOk:'주소가 복사되었습니다.',  sayNo:'복사에 실패했습니다.' },
+  en:{ k:'KOREAN · for your taxi driver',   e:'ENGLISH ADDRESS',
+       done:'COPIED ✓',       fail:'Press and hold to copy',
+       sayOk:'Address copied.',        sayNo:'Copy failed.' },
+  zh:{ k:'韩语地址 · 给司机看',             e:'英文地址',
+       done:'已复制 ✓',       fail:'请长按复制',
+       sayOk:'地址已复制。',            sayNo:'复制失败。' },
+  ja:{ k:'韓国語の住所 · 運転手に見せる',    e:'英語の住所',
+       done:'コピーしました ✓', fail:'長押しでコピー',
+       sayOk:'住所をコピーしました。',   sayNo:'コピーに失敗しました。' },
+  fr:{ k:'CORÉEN · pour le chauffeur',     e:'ADRESSE EN ANGLAIS',
+       done:'COPIÉ ✓',        fail:'Appuyez longuement',
+       sayOk:'Adresse copiée.',        sayNo:'Échec de la copie.' }
+};
+const lang = (new URLSearchParams(location.search).get('lang') || 'ko').toLowerCase();
+const T = L[lang] || L.ko;
+if (T !== L.ko) {
+  const tags = document.querySelectorAll('[data-label]');
+  if (tags[0]) tags[0].textContent = T.k;
+  if (tags[1]) tags[1].textContent = T.e;
+  document.documentElement.lang = lang;
+}
+const say = document.getElementById('say');
+
+document.querySelectorAll('.row').forEach(row => {
+  const label = row.querySelector('[data-label]');
+  const original = label.textContent;
+  let timer = null;
+
+  const run = async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const ok = await copyText(row.dataset.copy);
+    label.textContent = ok ? T.done : T.fail;
+    row.classList.toggle('done', ok);
+    say.textContent = ok ? T.sayOk : T.sayNo;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      label.textContent = original;
+      row.classList.remove('done');
+      say.textContent = '';
+    }, 2200);
+  };
+
+  row.addEventListener('click', run);
+  row.querySelector('.btn').addEventListener('click', run);
+});
+
+/* 노션 embed 높이를 내용에 맞게 알려준다 (지원되면 적용됨) */
+function tellHeight(){
+  const h = document.documentElement.scrollHeight;
+  try { parent.postMessage({ type:'resize', height:h }, '*'); } catch(e){}
+}
+window.addEventListener('load', tellHeight);
+window.addEventListener('resize', tellHeight);
+</script>
+</body>
+</html>
